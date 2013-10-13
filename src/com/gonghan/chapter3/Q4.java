@@ -17,57 +17,100 @@ public class Q4 {
 	private HanoiStack first;
 	private HanoiStack second;
 	private HanoiStack third;
-	
+	private String singleSpace = " ";
+	private String Rod = "@";
+	private int step_counter;
+
 	public Q4(int n) {
 		this.NumofDisks = n;
-		this.first = new HanoiStack(n,"first");
-		this.second = new HanoiStack(n,"second");
-		this.third = new HanoiStack(n,"third");
+		this.step_counter = 1;
+		this.first = new HanoiStack(n, "first");
+		this.second = new HanoiStack(n, "second");
+		this.third = new HanoiStack(n, "third");
 		for (int i = n; i > 0; i--) {
 			this.first.push(i);
 		}
 	}
-	
-	public void start(){
-		this.move(first, second, third,this.NumofDisks);
+
+	public void start() {
+		this.showLine();
+		this.move(first, second, third, this.NumofDisks);
 	}
 
 	// recursive
-	public void move(HanoiStack start, HanoiStack mid, HanoiStack dest,int rob) {
+	public void move(HanoiStack start, HanoiStack mid, HanoiStack dest, int rob) {
 		// Ending condition, start has no nodes,
 		// n=number of robs in start
 		// Step 1. Move (n-1)robs in start to mid.
 		// Step 2. Move the last rob in start to dest
 
-		if (rob==0) {
+		if (rob == 0) {
 			// Ending condition, start has no nodes
 			return;
 		}
-		
-		//Step 1.
-		this.move(start, dest, mid,rob-1);
-		int nth=start.pop();
+
+		// Step 1.
+		this.move(start, dest, mid, rob - 1);
+		int nth = start.pop();
 		dest.push(nth);
-		String message=String.format("Move %d from Stack %s to Stack %s", nth,start.name,dest.name);
-		System.out.println(message);
-		this.move(mid, start, dest, rob-1);
+
+		// show step counter
+		String results = "Step " + this.step_counter + "\n";
+		this.step_counter++;
+		results += String.format("Move %d from Stack %s to Stack %s\n", nth,
+				start.name, dest.name);
+
+		// ****, start line
+		System.out.println(this.showLine());
+		System.out.println(results);
+		this.display();
+		this.move(mid, start, dest, rob - 1);
 	}
 
 	// display three stacks, just for tests
 	public void display() {
-		System.out.println("Show first stack");
-		while(!first.isEmpty()){
-			System.out.print(first.pop()+", ");
-		}
-		System.out.println("Show second stack");
-		while(!second.isEmpty()){
-			System.out.print(second.pop()+", ");
-		}
-		System.out.println("Show third stack");
-		while(!third.isEmpty()){
-			System.out.print(third.pop()+", ");
+		String results = "";
+
+		for (int i = 1; i <= this.NumofDisks; i++) {
+			// add three stacks
+			results += this.showRods(first, i);
+			results += this.showRods(second, i);
+			results += this.showRods(third, i);
+			results += "\n";
 		}
 
+		System.out.print(results);
+	}
+
+	private String showLine() {
+		String results = this.longDuplicateString(30, "*");
+		return results;
+	}
+
+	private String showRods(HanoiStack stack, int line) {
+		String results = "";
+		int size = stack.getSize();
+		int rods = line + size - this.NumofDisks;
+		if (rods <= 0) {
+			results += this.longDuplicateString(this.NumofDisks,
+					this.singleSpace);
+		} else {
+			int number = stack.peekAt(line + size - this.NumofDisks);
+			results += this.longDuplicateString(number, this.Rod);
+			results += this.longDuplicateString(this.NumofDisks - number,
+					this.singleSpace);
+		}
+		results += "|";
+		return results;
+
+	}
+
+	private String longDuplicateString(int num, String s) {
+		String result = "";
+		for (int i = 0; i < num; i++) {
+			result += s;
+		}
+		return result;
 	}
 }
 
@@ -76,10 +119,10 @@ class HanoiStack {
 	private int array[];
 	public String name;
 
-	public HanoiStack(int size,String name) {
+	public HanoiStack(int size, String name) {
 		this.array = new int[size];
 		this.index = 0;
-		this.name=name;
+		this.name = name;
 	}
 
 	public void push(int value) {
@@ -102,7 +145,15 @@ class HanoiStack {
 		}
 	}
 
+	public int peekAt(int p) {
+		return this.array[index - p];
+	}
+
 	private boolean checkValid() {
 		return false;
+	}
+
+	public int getSize() {
+		return index;
 	}
 }
