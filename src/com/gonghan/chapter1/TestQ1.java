@@ -1,11 +1,11 @@
-package testChapter1;
+package com.gonghan.chapter1;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import chapter1.Q1;
+
 
 public class TestQ1 {
 

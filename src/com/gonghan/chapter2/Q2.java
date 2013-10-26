@@ -1,4 +1,4 @@
-package chapter2;
+package com.gonghan.chapter2;
 
 public class Q2 {
 
